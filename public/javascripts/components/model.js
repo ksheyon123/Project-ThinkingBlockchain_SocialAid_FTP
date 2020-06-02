@@ -43,5 +43,18 @@ class Admin {
             }
         )
     }
+    GetAdsUri () { 
+        return new Promise (
+            async (resolve, reject) => {
+                try {
+                    await myConnection.query('SELECT * FROM adsuri');
+
+                    resolve()
+                } catch (err) {
+                    reject(err)
+                }
+            }
+        )
+    }
 }
 module.exports = new Admin();
