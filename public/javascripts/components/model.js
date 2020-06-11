@@ -4,7 +4,7 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM notice');
+                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM ts_notice');
                     resolve(resReturn[0])
                 } catch (err) {
                     reject(err)
@@ -18,10 +18,10 @@ class Admin {
             async (resolve, reject) => {
                 try {
                     var ymd = await functions.DateCreator();
-                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1,3,"0") AS cnt FROM notice');
+                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1,3,"0") AS cnt FROM ts_notice');
                     var code = 'Notice' + returnCount[0][0].cnt;
 
-                    await myConnection.query('INSERT INTO notice (noticeid, title, date, wel, sentence_1, sentence_2, bye) VALUES (?, ?, ?, ?, ?, ?, ?)', [code, data.title, ymd, data.wel, data.sentence_1, data.sentence_2, data.bye])
+                    await myConnection.query('INSERT INTO ts_notice (noticeid, title, date, wel, sentence_1, sentence_2, bye) VALUES (?, ?, ?, ?, ?, ?, ?)', [code, data.title, ymd, data.wel, data.sentence_1, data.sentence_2, data.bye])
 
                     resolve(true)
                 } catch (err) {
@@ -35,10 +35,24 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT catesid, name FROM cates');
-                    resolve(resReturn[0])
+                    var resReturn = await myConnection.query('SELECT catesid, name FROM ts_cates');
+                    resolve(resReturn)
                 } catch (err) {
                     reject * (err)
+                }
+            }
+        )
+    }
+
+    InsertCates(name) {
+        return new Promise (
+            async (resolve, reject) => {
+                try {
+                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1) AS cnt FROM ts_cates');
+                    var code = 'C' + returnCount[0].cnt;
+                    await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name])
+                } catch (err) {
+                    
                 }
             }
         )
@@ -47,7 +61,7 @@ class Admin {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    await myConnection.query('SELECT * FROM adsuri');
+                    await myConnection.query('SELECT * FROM ts_adsuri');
 
                     resolve()
                 } catch (err) {

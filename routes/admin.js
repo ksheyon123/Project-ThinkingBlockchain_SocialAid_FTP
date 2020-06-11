@@ -6,7 +6,18 @@ var model = require('../public/javascripts/components/model.js');
 router.get('/getcates', async (req, res) => {
   try {
     var catesList = await model.GetAllCates();
+    console.log(catesList)
     res.status(200).send(catesList)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
+router.post('/insertcates', async (req, res) => {
+  try {
+    var data = req.body.name;
+    await model.GetAllCates(data);
+    res.status(200).send(true)
   } catch (err) {
     res.status(500).send(err)
   }

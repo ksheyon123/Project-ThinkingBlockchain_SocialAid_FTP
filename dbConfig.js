@@ -1,12 +1,12 @@
-  
-const mysql = require('mysql2/promise');
+
+const mysql = require('mariadb');
 
 var dbConfig = {
-    host: 'localhost',
+    host: '13.231.236.30',
     port: 3306,
-    user: 'root',
-    password: '1234',
-    database: 'socialaid',
+    user: 'socialade',
+    password: 'socialade!@',
+    database: 'santa_coin',
 };
 
 const pool = mysql.createPool(dbConfig);
