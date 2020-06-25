@@ -17,7 +17,6 @@ var router = express.Router();
 var model = require('../public/javascripts/components/model.js');
 
 router.get('/', (req, res) => {
-  console.log('hi')
   res.status(200).render('index');
 });
 
@@ -36,7 +35,7 @@ router.post('/image/upload', upload.single('image'), async (req, res) => {
 
     var uri = 'http://54.248.0.228:3001/images/' + req.file.filename;
     console.log(uri)
-    res.status(200).send(true);
+    res.status(200).redirect('/api/banner');
   } catch (err) {
     console.log(err)
   }
