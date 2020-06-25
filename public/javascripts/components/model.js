@@ -4,8 +4,8 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS date FROM ts_notice');
-                    resolve(resReturn[0])
+                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS edate FROM ts_notice');
+                    resolve(resReturn)
                 } catch (err) {
                     reject(err)
                 }
@@ -35,7 +35,7 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT catesid, name FROM ts_cates');
+                    var resReturn = await myConnection.query('SELECT * FROM ts_cates');
                     resolve(resReturn)
                 } catch (err) {
                     reject * (err)
@@ -48,11 +48,13 @@ class Admin {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1) AS cnt FROM ts_cates');
+                    var returnCount = await myConnection.query('SELECT COUNT(*) + 1 AS cnt FROM ts_cates');
                     var code = 'C' + returnCount[0].cnt;
-                    await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name])
+			console.log(code);
+                    await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name]);
+		   resolve(true)
                 } catch (err) {
-                    
+                   reject(err) 
                 }
             }
         )

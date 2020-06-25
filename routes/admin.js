@@ -6,7 +6,6 @@ var model = require('../public/javascripts/components/model.js');
 router.get('/getcates', async (req, res) => {
   try {
     var catesList = await model.GetAllCates();
-    console.log(catesList)
     res.status(200).send(catesList)
   } catch (err) {
     res.status(500).send(err)
@@ -16,7 +15,7 @@ router.get('/getcates', async (req, res) => {
 router.post('/insertcates', async (req, res) => {
   try {
     var data = req.body.name;
-    await model.GetAllCates(data);
+    await model.InsertCates(data);
     res.status(200).send(true)
   } catch (err) {
     res.status(500).send(err)
@@ -26,9 +25,8 @@ router.post('/insertcates', async (req, res) => {
 router.get('/getnotice', async (req, res) => {
   try {
     var resReturn = await model.GetAllNotice();
-    console.log(resReturn[0].date)
     for (var i = 0; i < resReturn.length; i++) {
-      resReturn[i].date = resReturn[i].date.substring(0, 10)
+      resReturn[i].date = JSON.stringify(resReturn[i].date).substring(1, 11)
       resReturn[i].visible = false;
     }
     res.status(200).send(resReturn)
@@ -54,6 +52,14 @@ router.post('/insertnotice', async (req, res) => {
   } catch (err) {
     console.log(err)
     res.status(500).send(err)
+  }
+});
+
+router.post('/insertadsuri', async (req, res) => {
+  try {
+
+  } catch {
+
   }
 });
 
