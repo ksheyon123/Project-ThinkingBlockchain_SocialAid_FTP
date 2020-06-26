@@ -18,10 +18,10 @@ class Admin {
             async (resolve, reject) => {
                 try {
                     var ymd = await functions.DateCreator();
-                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1,3,"0") AS cnt FROM ts_notice');
+                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1,3,"0") AS cnt FROM notice');
                     var code = 'Notice' + returnCount[0][0].cnt;
 
-                    await myConnection.query('INSERT INTO ts_notice (noticeid, title, date, wel, sentence_1, sentence_2, bye) VALUES (?, ?, ?, ?, ?, ?, ?)', [code, data.title, ymd, data.wel, data.sentence_1, data.sentence_2, data.bye])
+                    await myConnection.query('INSERT INTO notice (noticeid, title, date, wel, sentence_1, sentence_2, bye) VALUES (?, ?, ?, ?, ?, ?, ?)', [code, data.title, ymd, data.wel, data.sentence_1, data.sentence_2, data.bye])
 
                     resolve(true)
                 } catch (err) {
@@ -54,7 +54,7 @@ class Admin {
                     await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name]);
 		   resolve(true)
                 } catch (err) {
-                   reject(err) 
+                   reject(err)
                 }
             }
         )
@@ -63,11 +63,24 @@ class Admin {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    await myConnection.query('SELECT * FROM ts_adsuri');
-
-                    resolve()
+                    var adsList = await myConnection.query('SELECT * FROM ts_adsuri');
+                    resolve(adsList)
                 } catch (err) {
                     reject(err)
+                }
+            }
+        )
+    }
+    InsertAds (uri, adsuri, info) {
+        return new Promise (
+            async (resolve, reject) => {
+                try {
+		    var returnCount = await myConnection.query('SELECT COUNT(*) + 1 AS cnt FROM ts_adsuri');
+                    var code = 'ADS' + returnCount[0].cnt;
+                    await myConnection.query('INSERT INTO ts_adsuri (adsid, uri, link, info) VALUES (?, ?, ?, ?)', [code, uri, adsuri, info]);
+		    resolve (true);
+                } catch (err) {
+		    reject(err);
                 }
             }
         )

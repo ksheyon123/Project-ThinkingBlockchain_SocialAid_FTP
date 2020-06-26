@@ -1,7 +1,55 @@
 var express = require('express');
+var multer = require('multer');
+const upload = multer({
+  storage: multer.diskStorage({
+    // set a localstorage destination
+    destination: (req, file, cb) => {
+      cb(null, 'public/images/');
+    },
+    // convert a file name
+    filename: (req, file, cb) => {
+      var type = file.mimetype.split('/');
+      cb(null, JSON.stringify(Date.now()) + '.' + type[1]);
+    },
+  }),
+});
 var router = express.Router();
-
 var model = require('../public/javascripts/components/model.js');
+
+router.get('/', (req, res) => {
+  res.status(200).render('index');
+});
+
+router.post('/login', (req, res) => {
+  res.status(200).render('main');
+});
+
+router.get('/banner', (req, res) => {
+  res.status(200).render('banner');
+});
+
+router.post('/image/upload', upload.single('image'), async (req, res) => {
+  try {
+    console.log(req.body)
+    console.log(req.file)
+    var adsuri = req.body.adsuri;
+    var info = req.body.info;
+    var uri = 'http://54.248.0.228:3001/images/' + req.file.filename;
+    await model.InsertAds(uri, adsuri, info);
+    res.status(200).redirect('/api/banner');
+  } catch (err) {
+    console.log(err)
+  }
+});
+
+router.get('/image/load/', async (req, res) => {
+  try {
+    var resReturn =  await model.GetAdsUri();
+    res.status(200).send(resReturn);
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 router.get('/getcates', async (req, res) => {
   try {
