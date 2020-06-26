@@ -4,7 +4,7 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS edate FROM notice');
+                    var resReturn = await myConnection.query('SELECT *, DATE_FORMAT(date, "%Y-%m-%d") AS edate FROM ts_notice');
                     resolve(resReturn)
                 } catch (err) {
                     reject(err)
@@ -35,7 +35,7 @@ class Admin {
         return new Promise(
             async (resolve, reject) => {
                 try {
-                    var resReturn = await myConnection.query('SELECT catesid, name FROM cates');
+                    var resReturn = await myConnection.query('SELECT * FROM ts_cates');
                     resolve(resReturn)
                 } catch (err) {
                     reject * (err)
@@ -48,11 +48,13 @@ class Admin {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    var returnCount = await myConnection.query('SELECT LPAD(COUNT(*) + 1) AS cnt FROM cates');
+                    var returnCount = await myConnection.query('SELECT COUNT(*) + 1 AS cnt FROM ts_cates');
                     var code = 'C' + returnCount[0].cnt;
-                    await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name])
+			console.log(code);
+                    await myConnection.query('INSERT INTO ts_cates (catesid, name) VALUES (?, ?)', [code, name]);
+		   resolve(true)
                 } catch (err) {
-                    reject(err)
+                   reject(err)
                 }
             }
         )
@@ -61,22 +63,24 @@ class Admin {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    await myConnection.query('SELECT * FROM adsuri');
-
-                    resolve()
+                    var adsList = await myConnection.query('SELECT * FROM ts_adsuri');
+                    resolve(adsList)
                 } catch (err) {
                     reject(err)
                 }
             }
         )
     }
-    InsertAds (uri) {
+    InsertAds (uri, adsuri, info) {
         return new Promise (
             async (resolve, reject) => {
                 try {
-                    await myConnection.query('INSERT INTO ts_adsuri (uri) VALUES (?)', [uri]);
+		    var returnCount = await myConnection.query('SELECT COUNT(*) + 1 AS cnt FROM ts_adsuri');
+                    var code = 'ADS' + returnCount[0].cnt;
+                    await myConnection.query('INSERT INTO ts_adsuri (adsid, uri, link, info) VALUES (?, ?, ?, ?)', [code, uri, adsuri, info]);
+		    resolve (true);
                 } catch (err) {
-
+		    reject(err);
                 }
             }
         )

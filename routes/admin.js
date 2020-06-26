@@ -32,9 +32,10 @@ router.post('/image/upload', upload.single('image'), async (req, res) => {
   try {
     console.log(req.body)
     console.log(req.file)
-
+    var adsuri = req.body.adsuri;
+    var info = req.body.info;
     var uri = 'http://54.248.0.228:3001/images/' + req.file.filename;
-    console.log(uri)
+    await model.InsertAds(uri, adsuri, info);
     res.status(200).redirect('/api/banner');
   } catch (err) {
     console.log(err)
@@ -43,16 +44,16 @@ router.post('/image/upload', upload.single('image'), async (req, res) => {
 
 router.get('/image/load/', async (req, res) => {
   try {
-
+    var resReturn =  await model.GetAdsUri();
+    res.status(200).send(resReturn);
   } catch (err) {
-
+    console.log(err)
   }
 })
 
 router.get('/getcates', async (req, res) => {
   try {
     var catesList = await model.GetAllCates();
-    console.log(catesList)
     res.status(200).send(catesList)
   } catch (err) {
     res.status(500).send(err)
@@ -62,7 +63,7 @@ router.get('/getcates', async (req, res) => {
 router.post('/insertcates', async (req, res) => {
   try {
     var data = req.body.name;
-    await model.GetAllCates(data);
+    await model.InsertCates(data);
     res.status(200).send(true)
   } catch (err) {
     res.status(500).send(err)
@@ -72,7 +73,6 @@ router.post('/insertcates', async (req, res) => {
 router.get('/getnotice', async (req, res) => {
   try {
     var resReturn = await model.GetAllNotice();
-    console.log(resReturn)
     for (var i = 0; i < resReturn.length; i++) {
       resReturn[i].date = JSON.stringify(resReturn[i].date).substring(1, 11)
       resReturn[i].visible = false;
@@ -100,6 +100,14 @@ router.post('/insertnotice', async (req, res) => {
   } catch (err) {
     console.log(err)
     res.status(500).send(err)
+  }
+});
+
+router.post('/insertadsuri', async (req, res) => {
+  try {
+
+  } catch {
+
   }
 });
 
